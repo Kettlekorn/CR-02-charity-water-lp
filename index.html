@@ -1,47 +1,351 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Charity Water Landing Page</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>charity: water</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      color: #1a1a1a;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1em 2em;
+      background: #fff;
+      border-bottom: 0.5px solid #1a1a1a; /* Small black border at the bottom of the white box */
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+    .logo img {
+      height: 24px;
+      margin-right: 8px;
+    }
+    nav a {
+      margin: 0 1em;
+      /* Make sure nav links with arrows don't push other links out of alignment */
+      padding-right: 0;
+      box-sizing: border-box;
+      text-decoration: none;
+      color: #1a1a1a;
+      font-weight: bold;
+      font-family: 'Proxima Nova', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      display: inline-block;
+      white-space: nowrap; /* Prevent nav links from splitting into two lines */
+      vertical-align: middle;
+    }
+    .give-button {
+      background: #1a1a1a;
+      color: #fff;
+      padding: 0.5em 1em;
+      border: none;
+      text-decoration: none;
+      border-radius: 4px;
+      font-family: 'Proxima Nova', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      display: inline-block;
+      white-space: nowrap; /* Prevent button from splitting into two lines */
+      vertical-align: middle;
+    }
+    .hero {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0;
+      padding: 0;
+      border: none;
+    }
+    .hero-text {
+      /* Yellow box for text */
+      background: #ffcc00;
+      padding: 2em 1.5em 2em 2em;
+      flex: 0 1 350px;
+      max-width: 400px;
+      margin: 0;
+      border: none;
+      /* No right border here; handled in media queries for large screens only */
+      box-sizing: border-box;
+      text-align: center; /* Center all text inside the yellow box */
+    }
+    .hero-text h1 {
+      font-size: 2em;
+      margin-bottom: 0.5em;
+      font-family: "Georgia", "Times New Roman", serif;
+      font-weight: normal;
+    }
+    .hero-text p {
+      margin-bottom: 1em;
+      font-family: 'Proxima Nova', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    .cta-button {
+      background: #1a1a1a;
+      color: #fff;
+      padding: 0.75em 1.5em;
+      border: none;
+      border-radius: 4px;
+      font-size: 1em;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      font-family: 'Proxima Nova', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    .hero-image {
+      /* Make the image area take up more space and remove all gaps */
+      flex: 2 1 0;
+      display: flex;
+      align-items: stretch;
+      justify-content: stretch;
+      margin: 0;
+      padding: 0;
+      border: none;
+    }
+    .hero-image img {
+      /* Make the image fill all available space, no gaps */
+      width: 100%;
+      height: 100%;
+      max-width: none;
+      max-height: none;
+      object-fit: cover;
+      display: block;
+      margin: 0;
+      box-shadow: none;
+      /* Only show left border if not immediately next to a yellow box with a right border */
+      border: none;
+    }
+
+    /* On small screens, add a border to the top of the image (next to yellow box above) */
+    @media (max-width: 700px) {
+      .hero-text {
+        border-right: none; /* Remove right border when stacked */
+        border-bottom: 0.5px solid #1a1a1a; /* Add bottom border to yellow box */
+      }
+      .hero-image img {
+        border-top: 0.5px solid #1a1a1a;
+      }
+    }
+
+    /* On large screens, add a border to the left of the image (next to yellow hero box) and bottom (next to bottom yellow box) */
+    @media (min-width: 701px) {
+      .hero-text {
+        border-right: 0.25px solid #1a1a1a; /* Thinner border on right of yellow box */
+        border-bottom: none;
+      }
+      .hero-image img {
+        border-left: 0.25px solid #1a1a1a; /* Thinner border on left of image */
+        border-bottom: 0.5px solid #1a1a1a;
+      }
+    }
+    /* Dynamic left-side box styles */
+    .bottom-popup {
+      position: fixed;
+      left: -400px; /* Hidden by default, off the left */
+      bottom: 30px;
+      top: auto;
+      width: 340px;
+      max-width: 340px;
+      width: 90vw;
+      min-width: 220px;
+      background: #ffcc00;
+      color: #000;
+      text-align: left;
+      padding: 1em 2em 1em 1.5em;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+      transition: left 0.4s;
+      z-index: 1000;
+      font-family: 'Proxima Nova', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      border-radius: 0 8px 8px 0;
+      display: flex;
+      align-items: center;
+      gap: 1em;
+    }
+    .bottom-popup.show {
+      left: 0;
+    }
+    /* Make hero-bottom-yellow hidden by default, visible on small screens and large screens below hero */
+    .hero-bottom-yellow {
+      background: #ffcc00;
+      width: 100vw;
+      max-width: 100vw;
+      min-height: 288px; /* 48px * 6 = 288px */
+      /* Removed border-top to eliminate border between yellow boxes */
+      border: none;
+      box-sizing: border-box;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Proxima Nova', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 1em;
+      color: #1a1a1a;
+    }
+    /* Responsive styles for navigation: keep all links together on small screens */
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1em;
+      }
+      .logo {
+        margin-bottom: 1em;
+      }
+      nav {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+        align-items: stretch;
+        flex-wrap: nowrap; /* Prevent splitting into two rows */
+      }
+      nav a, .give-button {
+        margin: 0;
+        width: 100%;
+        text-align: center;
+        font-size: 0.9em;
+        padding: 0.5em 0;
+        min-width: 0;
+        box-sizing: border-box;
+        white-space: nowrap; /* Prevent text from wrapping to next line */
+    }
+    nav a[style*="inline-flex"] {
+        justify-content: center;
+        width: 100%;
+        padding-left: 0;
+        padding-right: 0;
+      }
+      .give-button {
+        font-size: 0.9em;
+        padding: 0.5em 0;
+      }
+    }
+    @media (max-width: 700px) {
+      .hero {
+        flex-direction: column;
+      }
+      .hero-text {
+        border-right: none;
+        border-bottom: none; /* Remove border if bottom yellow box is present */
+        width: 100vw;
+        max-width: 100vw;
+        box-sizing: border-box;
+      }
+      .hero-bottom-yellow {
+        display: flex;
+        border: none; /* Make sure no border appears between yellow boxes when stacked */
+      }
+    }
+    @media (min-width: 701px) {
+      .hero-bottom-yellow {
+        display: flex;
+      }
+    }
+  </style>
 </head>
 <body>
-    <!-- Hero Section: This is the main banner at the top of the page -->
-    <section class="hero">
-        <!-- Main headline -->
-        <h1>Clean Water for Everyone</h1>
-        <!-- Subheadline -->
-        <p>Join us in bringing safe, clean water to communities in need.</p>
-    </section>
 
-    <!-- Story Section: This tells the story of the nonprofit -->
-    <section class="story">
-        <h2>Our Story</h2>
-        <p>
-         
-    </section>
+  <header>
+    <div class="logo">
+      <!-- Charity Water logo image -->
+      <a href="index.html">
+        <img src="img/cw_logo-2.png" alt="charity: water logo">
+      </a>
+    </div>
+    <nav>
+      <!-- TAKE ACTION nav link with down arrow, perfectly vertically aligned -->
+      <a href="#" style="display: inline-flex; align-items: center; gap: 4px;">
+        TAKE ACTION
+        <!-- Down arrow SVG, thicker, sharp V shape (two straight lines joined at a point), and vertically centered with text -->
+        <svg width="18" height="16" viewBox="0 0 18 16" style="display: inline; vertical-align: middle;" aria-hidden="true">
+          <polyline points="5,7 9,13 13,7" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <!-- ABOUT US nav link with down arrow, perfectly vertically aligned -->
+      <a href="#" style="display: inline-flex; align-items: center; gap: 4px;">
+        ABOUT US
+        <!-- Down arrow SVG, thicker, sharp V shape (two straight lines joined at a point), and vertically centered with text -->
+        <svg width="18" height="16" viewBox="0 0 18 16" style="display: inline; vertical-align: middle;" aria-hidden="true">
+          <polyline points="5,7 9,13 13,7" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <a href="#">WHY WATER?</a>
+      <a class="give-button" href="#">GIVE 💧</a>
+    </nav>
+  </header>
 
-    <!-- Real-World Impact Story Section -->
-    <section class="impact-story">
-        <!-- Section headline -->
-        <h2>Real Impact: Meet Amina</h2>
-        <!-- Container for image and text -->
-        <div class="impact-content">
-            <!-- Impact image -->
-            <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80" alt="Amina smiling with clean water" class="impact-image">
-            <!-- Impact story text -->
-            <p>
-                Amina used to walk miles every day to collect water for her family. Thanks to your support, her village now has a clean water well. Amina can go to school and her family is healthier and happier.
-            </p>
-        </div>
-    </section>
+  <main class="hero">
+    <div class="hero-text">
+      <h1>Provide clean water, with just a tap</h1>
+      <p>See the impact of every donation for communities in need</p>
+      <a class="cta-button" href="#">Tap in</a>
+    </div>
+    <div class="hero-image">
+      <!-- Water pump and community image -->
+      <img src="img/waterpump.png" alt="Water pump and community">
+    </div>
+  </main>
+  <!-- Bottom yellow box: always below hero, visible on all screens when not stacked, and on small screens -->
+  <div class="hero-bottom-yellow">
+    <!-- You can add more info or leave empty for now -->
+  </div>
 
-    <!-- Call-to-Action Section: This encourages visitors to take action -->
-    <section class="call-to-action">
-        <h2>Make a Difference</h2>
-        <p>Your support can help save lives. Every donation brings us closer to a world with clean water for all.</p>
-        <a href="#" class="donate-button">Donate Now</a>
-    </section>
+  <script>
+    // Simple confetti effect for beginners
+    function showConfetti(e) {
+      if (e) e.preventDefault();
+      // Create confetti container
+      var confettiContainer = document.createElement('div');
+      confettiContainer.style.position = 'fixed';
+      confettiContainer.style.left = 0;
+      confettiContainer.style.top = 0;
+      confettiContainer.style.width = '100vw';
+      confettiContainer.style.height = '100vh';
+      confettiContainer.style.pointerEvents = 'none';
+      confettiContainer.style.zIndex = 9999;
+      document.body.appendChild(confettiContainer);
+      // Create confetti pieces
+      for (var i = 0; i < 60; i++) {
+        var confetti = document.createElement('div');
+        confetti.style.position = 'absolute';
+        confetti.style.width = '10px';
+        confetti.style.height = '18px';
+        confetti.style.background = 'hsl(' + (Math.random()*360) + ',90%,60%)';
+        confetti.style.left = (Math.random()*100) + 'vw';
+        confetti.style.top = '-30px';
+        confetti.style.opacity = 0.8;
+        confetti.style.borderRadius = '3px';
+        confetti.style.transform = 'rotate(' + (Math.random()*360) + 'deg)';
+        confettiContainer.appendChild(confetti);
+        // Animate confetti
+        (function(confetti) {
+          var fall = Math.random()*60+40;
+          var spin = Math.random()*360;
+          setTimeout(function() {
+            confetti.style.transition = 'top 1.2s linear, left 1.2s linear, transform 1.2s linear';
+            confetti.style.top = (fall+40) + 'vh';
+            confetti.style.left = (Math.random()*100) + 'vw';
+            confetti.style.transform = 'rotate(' + spin + 'deg)';
+          }, 10);
+        })(confetti);
+      }
+      // Remove confetti after 1.5 seconds
+      setTimeout(function() {
+        confettiContainer.remove();
+      }, 1500);
+    }
+    document.querySelector('.cta-button').addEventListener('click', showConfetti);
+    document.querySelector('.give-button').addEventListener('click', showConfetti);
+
+    // Show confetti when user scrolls to the bottom of the page
+    // This is a simple way for beginners: checks if user is at the bottom
+    var confettiShownOnScroll = false; // Only show once per page load
+    window.addEventListener('scroll', function() {
+      // Check if user scrolled to the bottom (with a little buffer)
+      if (!confettiShownOnScroll && (window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 10)) {
+        showConfetti();
+        confettiShownOnScroll = true;
+      }
+    });
+  </script>
 </body>
 </html>
