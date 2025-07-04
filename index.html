@@ -113,6 +113,7 @@
       margin: 0;
       padding: 0;
       border: none;
+      background: transparent; /* Remove any white background */
     }
     .hero-text {
       /* Yellow box for text */
@@ -129,6 +130,18 @@
       flex-direction: column;
       justify-content: center;
       min-height: 100%;
+    }
+    .hero-text-inner {
+      opacity: 0;
+      transform: translateX(-240px); /* Further increased slide-in distance */
+      transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.7,0,0.3,1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .hero-text-inner.slide-in {
+      opacity: 1;
+      transform: translateX(0);
     }
     .hero-text h1 {
       font-size: 2em;
@@ -268,6 +281,18 @@
         justify-content: center;
         min-height: 220px;
       }
+      .hero-text-inner {
+        opacity: 0;
+        transform: translateX(-240px); /* Further increased slide-in distance */
+        transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.7,0,0.3,1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .hero-text-inner.slide-in {
+        opacity: 1;
+        transform: translateX(0);
+      }
       .hero-image {
         width: 100vw;
         max-width: 100vw;
@@ -304,6 +329,18 @@
         flex-direction: column;
         justify-content: center;
         min-height: 220px;
+      }
+      .hero-text-inner {
+        opacity: 0;
+        transform: translateX(-240px); /* Further increased slide-in distance */
+        transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.7,0,0.3,1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .hero-text-inner.slide-in {
+        opacity: 1;
+        transform: translateX(0);
       }
       .hero-bottom-yellow {
         background: #ffcc00;
@@ -362,9 +399,11 @@
 
   <main class="hero">
     <div class="hero-text">
-      <h1>Provide clean water, with just a tap</h1>
-      <p>See the impact of every donation for communities in need</p>
-      <a class="cta-button" href="#">Tap in</a>
+      <div class="hero-text-inner">
+        <h1>Provide clean water, with just a tap</h1>
+        <p>See the impact of every donation for communities in need</p>
+        <a class="cta-button" href="#">Tap in</a>
+      </div>
     </div>
     <div class="hero-image">
       <!-- Water pump and community image -->
@@ -499,6 +538,16 @@
       nav.classList.remove('nav-visible');
       document.body.classList.remove('with-nav');
     })();
+
+    // Slide in hero text on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      var heroTextInner = document.querySelector('.hero-text-inner');
+      if (heroTextInner) {
+        setTimeout(function() {
+          heroTextInner.classList.add('slide-in');
+        }, 200); // slight delay for effect
+      }
+    });
   </script>
 </body>
 </html>
